@@ -1,0 +1,84 @@
+#VRML_SIM R2022a utf8
+WorldInfo {
+  info [
+    "Model of pedal racer."
+    "A simple example of a passive system including a mechanical loop"
+    "Biorob, EPFL"
+  ]
+  lineScale 0.2
+}
+Viewpoint {
+  orientation -0.0958835808613159 0.02883943078251331 0.9949746861872176 2.8003618890960604
+  position 1.2959089002955813 -0.26202823193402214 0.3384079035663895
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Robot {
+  translation 0 0 0.04
+  children [
+    DEF Body Shape {
+      appearance PBRAppearance {
+        baseColor 1 0 0
+        metalness 0.5
+      }
+      geometry Box {
+        size 0.05 0.05 0.025
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        anchor 0 0.045 -0.015
+      }
+      device [
+        RotationalMotor {
+          name "leg1"
+        }
+      ]
+      endPoint Solid {
+        translation 0 0.045 -0.015
+        rotation 0.9999999999999999 0 0 0.7846053071795869
+        children [
+          DEF Leg Shape {
+            appearance PBRAppearance {
+            }
+            geometry Capsule {
+              height 0.04
+              radius 0.007
+            }
+          }
+        ]
+        boundingObject USE Leg
+        physics DEF physics_leg Physics {
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        anchor 0 -0.045 -0.015
+      }
+      device [
+        RotationalMotor {
+          name "leg2"
+        }
+      ]
+      endPoint Solid {
+        translation 0 -0.04499999962674044 -0.01500000111977863
+        rotation -1 0 0 0.7846049751160299
+        children [
+          USE Leg
+        ]
+        name "solid(1)"
+        boundingObject USE Leg
+        physics USE physics_leg
+      }
+    }
+  ]
+  boundingObject USE Body
+  physics Physics {
+  }
+  controller "evolution_of_walking"
+}
+Floor {
+}
