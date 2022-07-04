@@ -1,1 +1,2 @@
+pyglet
 pymunk==5.4.2

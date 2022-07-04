@@ -12,5 +12,20 @@ Goal: figure starts on the left side of the universe (2D) and needs to walk to t
 - Pymunk 5.4.2 (pip install this exact version! newer versions won't work 👈)
 - Python >= 3.7
 
+### How to run:
+
+Create python virtual environment and install dependencies (very quick)
+```
+python3 -m venv env
+source env/bin/activate
+
+pip install -r requirements.txt
+```
+
+Run main.py (change parameters inside main.py)
+```
+python3 main.py
+```
+
 ### TODO:
 - Solve gravity to make the figure move left/right. Now it is stuck in one place 🥵
