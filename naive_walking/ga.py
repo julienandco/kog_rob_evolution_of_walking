@@ -7,7 +7,7 @@ import copy
 class Individual:
     """Individual is represented by
 
-    its actions (list of integers between 0 and 4) and a score.
+    list of actions (list of integers between 1 and 4) and a score.
     score will be set after running the simulation and evaluating
     individual actions
     """
@@ -25,7 +25,7 @@ class GeneticAlgorithm:
             self, figure: Figure,
             population_size: int,
             num_generations: int,
-            simulation_runtime: float = 7.5,
+            simulation_runtime: float = 10,
             crossover_rate: float = 0.5,
             elitism_size: float = 0.1,
             crossover_size: float = 0.4,
@@ -43,14 +43,14 @@ class GeneticAlgorithm:
         self.best_individual = None
 
     def random_population(self, population_size: int) -> List[Individual]:
-        """Creates a random population
+        """Creates a random population of n individuals
 
         Generates lists of actions with random numbers from 0 to 4
         creates a population out of random individuals
         """
         population = []
         for x in range(population_size):
-            actions = [random.randint(0, 4) for _ in range(self.individual_size)]
+            actions = [random.randint(0, 3) for _ in range(self.individual_size)]
             individual = Individual(actions)
             population.append(individual)
         return population

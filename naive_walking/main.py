@@ -2,26 +2,21 @@ from universe import Figure
 from simulation import Simulation, Display
 from ga import GeneticAlgorithm
 
-# TODO: solve gravity. Our figure can easily jump but does not move left/right (it can only spin around)
-# TODO: I still don't know how to do that in Pymunk... 🥵
-# Trying to change: 1) universe.py Universe class -> set space gravity
-# Figure consists of 3 polygons, each has center of gravity 0, 0 by default (center of the body)
-
 # Pymunk simulation
-# runtime for a single simulation in seconds (e.g. 20 seconds)
+# runtime for a single simulation in seconds (e.g. 15 seconds)
 # one move per second results in a list of 20 actions
-sim_runtime = 20
-moves_per_second = 4
+sim_runtime = 18
+moves_per_second = 3
 
 # Creating the figure out of 3 polygons
 fig = Figure()
 
 # Parameters for genetic algorithm
-population_size = 50  # change this 👈
-num_generations = 20  # change this 👈
-crossover_rate = 0.5
-elitism_size = 0.1
-crossover_size = 0.8
+population_size = 100  # change this 👈
+num_generations = 50  # change this 👈
+elitism_size = 0.1  # percentage of best individuals that will be used in the next generation
+crossover_size = 0.6  # percentage of individuals that will be created using mutation (crossover)
+crossover_rate = 0.5  # probability of elite feature to be kept in genome
 
 # Running Genetic algorithm with our figure
 print('---Running GA for {} generations---'.format(num_generations))

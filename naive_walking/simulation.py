@@ -5,6 +5,13 @@ from typing import List
 
 
 class Simulation:
+    """Runs the simulation for n seconds
+
+    Simulates the universe (30 fps)
+    Figure makes n moves per second
+    The overlap is calculated after making a move (e.g. 4 fps)
+    The distance between figure and a right wall (i.e. finish position) is calculated in the end of the simulation time
+    """
     def __init__(
             self, actions: List[int],
             figure: Figure,
@@ -20,51 +27,50 @@ class Simulation:
         self.score: float = None
 
     def run(self) -> None:
-        """Runs the simulation for n seconds
-
-        Simulates the universe (makes a 30 fps step)
-        Figure makes n moves per second (n* current_action)
-        The overlap is calculated after making a move (4 fps)
-        The ball is placed back when it reaches the left wall
-        """
         current_time = 0.0
         current_action = 1
         runtime_reached = False
 
         while not runtime_reached:
             self.universe.space.step(self.fps)
-            current_time = current_time + self.fps
+            current_time += self.fps
 
-            if current_action < (self.num_actions_per_second *current_time):
+            if current_action < (current_time / self.num_actions_per_second):
                 movement = self.actions[current_action - 1]
+                if movement == 0:
+                    self.universe.move_left_poly('up')
                 if movement == 1:
-                    self.universe.move_left('up')
+                    self.universe.move_left_poly('down')
                 if movement == 2:
-                    self.universe.move_left('down')
+                    self.universe.move_right_poly('up')
                 if movement == 3:
-                    self.universe.move_right('up')
-                if movement == 4:
-                    self.universe.move_right('down')
+                    self.universe.move_right_poly('down')
                 current_action = current_action + 1
 
-                # self.universe.set_space_gravity(0)
+                # calculate overlap between figure and obstacle every step
+                self.universe.calculate_overlap()
 
             if current_time > self.runtime:
                 runtime_reached = True
 
-        self.score = self.universe.calculate_distance()
+        # calculate the distance reached at the end of the simulation
+        self.universe.calculate_distance()
+        self.score = self.universe.score
 
     def evaluate(self) -> float:
         return self.score
 
 
 class Display(pyglet.window.Window):
+    """ Given a list of actions displays the simulation using Pyglet
+    Similar code as in Simulation class.
+    """
     def __init__(
             self,
             actions: List[int],
             figure: Figure,
             label: str = '',
-            runtime: float = 8.2
+            runtime: float = 10
     ):
 
         super().__init__(width=1000, height=400, caption='Walking evolution ', resizable=False)
@@ -89,21 +95,26 @@ class Display(pyglet.window.Window):
     def update(self, dt) -> None:
         self.universe.space.step(self.fps)
         self.current_time = self.current_time + self.fps
-        if self.current_action < (self.num_actions_per_second * self.current_time):
+
+        if self.current_action < (self.current_time / self.num_actions_per_second):
             movement = self.actions[self.current_action - 1]
+            if movement == 0:
+                self.universe.move_left_poly('up')
             if movement == 1:
-                self.universe.move_left('up')
+                self.universe.move_left_poly('down')
             if movement == 2:
-                self.universe.move_left('down')
+                self.universe.move_right_poly('up')
             if movement == 3:
-                self.universe.move_right('up')
-            if movement == 4:
-                self.universe.move_right('down')
+                self.universe.move_right_poly('down')
             self.current_action = self.current_action + 1
 
-        self.score = self.universe.calculate_distance()
+            # calculate overlap between figure and obstacle every step
+            self.universe.calculate_overlap()
 
+        # calculate distance between figure and right wall in the end of the simulation
         if self.current_time > self.runtime:
+            self.universe.calculate_distance()
+            self.score = self.universe.score
             self.close()
 
     def close(self) -> None:
